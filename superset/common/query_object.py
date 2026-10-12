@@ -21,7 +21,7 @@ import inspect
 import logging
 from datetime import datetime
 from pprint import pformat
-from typing import Any, NamedTuple, TYPE_CHECKING
+from typing import Any, cast, NamedTuple, TYPE_CHECKING
 
 from flask import current_app
 from flask_babel import gettext as _
@@ -37,7 +37,13 @@ from superset.exceptions import (
 )
 from superset.extensions import event_logger
 from superset.sql.parse import sanitize_clause, transpile_to_dialect
-from superset.superset_typing import Column, Metric, OrderBy, QueryObjectDict
+from superset.superset_typing import (
+    Column,
+    LegacyMetric,
+    Metric,
+    OrderBy,
+    QueryObjectDict,
+)
 from superset.utils import json, pandas_postprocessing
 from superset.utils.cache_keys import add_impersonation_cache_key_if_needed
 from superset.utils.core import (
@@ -55,9 +61,6 @@ if TYPE_CHECKING:
     from superset.connectors.sqla.models import BaseDatasource
 
 logger = logging.getLogger(__name__)
-
-# TODO: Type Metrics dictionary with TypedDict when it becomes a vanilla python type
-#  https://github.com/python/mypy/issues/5288
 
 
 class DeprecatedField(NamedTuple):
@@ -224,7 +227,9 @@ class QueryObject:  # pylint: disable=too-many-instance-attributes
                         label=metric.get("label"),
                     )
                 )
-            return metric["label"]  # type: ignore
+            # ``AdhocMetric`` is ``total=False``, so a legacy ``{label: ...}``
+            # reference already type-checks as ``Metric``; narrow it here.
+            return cast(LegacyMetric, metric)["label"]
 
         self.metrics = metrics and [normalize_metric(x) for x in metrics]
 
