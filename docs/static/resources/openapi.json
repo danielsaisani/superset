@@ -1478,7 +1478,15 @@
           },
           "daily_seasonality": {
             "description": "Should daily seasonality be applied. An integer value will specify Fourier order of seasonality, `None` will automatically detect seasonality.",
-            "example": false
+            "example": false,
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              }
+            ]
           },
           "index": {
             "description": "Name of the column holding the x-axis data. Defaults to `__timestamp`.",
@@ -1520,11 +1528,27 @@
           },
           "weekly_seasonality": {
             "description": "Should weekly seasonality be applied. An integer value will specify Fourier order of seasonality, `None` will automatically detect seasonality.",
-            "example": false
+            "example": false,
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              }
+            ]
           },
           "yearly_seasonality": {
             "description": "Should yearly seasonality be applied. An integer value will specify Fourier order of seasonality, `None` will automatically detect seasonality.",
-            "example": false
+            "example": false,
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              }
+            ]
           }
         },
         "required": [
@@ -2712,11 +2736,33 @@
         "properties": {
           "ascending": {
             "description": "Sort ascending (the default) or descending. A list of booleans may be given to set the direction per entry in `by`.",
-            "example": true
+            "example": true,
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "items": {
+                  "type": "boolean"
+                },
+                "type": "array"
+              }
+            ]
           },
           "by": {
             "description": "Name, or list of names, of the columns to sort by. Ignored when `is_sort_index` is set.",
-            "example": "country"
+            "example": "country",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ]
           },
           "is_sort_index": {
             "description": "Whether to sort by the index rather than by column values.",

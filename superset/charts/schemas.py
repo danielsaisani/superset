@@ -766,19 +766,25 @@ class ChartDataSortOptionsSchema(ChartDataPostProcessingOperationOptionsSchema):
         },
     )
     by = fields.Raw(
-        # TODO: add correct union type once supported by Marshmallow
         metadata={
             "description": "Name, or list of names, of the columns to sort by. "
             "Ignored when `is_sort_index` is set.",
             "example": "country",
+            "oneOf": [
+                {"type": "string"},
+                {"type": "array", "items": {"type": "string"}},
+            ],
         },
     )
     ascending = fields.Raw(
-        # TODO: add correct union type once supported by Marshmallow
         metadata={
             "description": "Sort ascending (the default) or descending. A list of "
             "booleans may be given to set the direction per entry in `by`.",
             "example": True,
+            "oneOf": [
+                {"type": "boolean"},
+                {"type": "array", "items": {"type": "boolean"}},
+            ],
         },
     )
 
@@ -843,30 +849,30 @@ class ChartDataProphetOptionsSchema(ChartDataPostProcessingOperationOptionsSchem
         required=True,
     )
     yearly_seasonality = fields.Raw(
-        # TODO: add correct union type once supported by Marshmallow
         metadata={
             "description": "Should yearly seasonality be applied. "
             "An integer value will specify Fourier order of seasonality, `None` will "
             "automatically detect seasonality.",
             "example": False,
+            "oneOf": [{"type": "boolean"}, {"type": "integer"}],
         },
     )
     weekly_seasonality = fields.Raw(
-        # TODO: add correct union type once supported by Marshmallow
         metadata={
             "description": "Should weekly seasonality be applied. "
             "An integer value will specify Fourier order of seasonality, `None` will "
             "automatically detect seasonality.",
             "example": False,
+            "oneOf": [{"type": "boolean"}, {"type": "integer"}],
         },
     )
     daily_seasonality = fields.Raw(
-        # TODO: add correct union type once supported by Marshmallow
         metadata={
             "description": "Should daily seasonality be applied. "
             "An integer value will specify Fourier order of seasonality, `None` will "
             "automatically detect seasonality.",
             "example": False,
+            "oneOf": [{"type": "boolean"}, {"type": "integer"}],
         },
     )
     index = fields.String(
@@ -2110,9 +2116,9 @@ CHART_SCHEMAS = (
     DashboardFiltersResponseSchema,
     ChartDataResponseSchema,
     ChartDataAsyncResponseSchema,
-    # TODO: These should optimally be included in the QueryContext schema as an `anyOf`
-    #  in ChartDataPostProcessingOperation.options, but since `anyOf` is not
-    #  by Marshmallow<3, this is not currently possible.
+    # TODO: These could be referenced from ChartDataPostProcessingOperation.options
+    #  as a docs-only `anyOf` of `$ref`s; until then they are registered here so
+    #  they are included in the generated OpenAPI spec.
     ChartDataAdhocMetricSchema,
     ChartDataAggregateOptionsSchema,
     ChartDataContributionOptionsSchema,
