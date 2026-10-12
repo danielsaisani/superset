@@ -50,6 +50,8 @@ class QueryContextFactory:  # pylint: disable=too-few-public-methods
         *,
         current_slice: Slice | None = None,
         datasource: DatasourceDict,
+        # Raw query payloads are forwarded as kwargs to QueryObjectFactory.create
+        # and may carry deprecated or extra keys, so they stay untyped dicts.
         queries: list[dict[str, Any]],
         form_data: dict[str, Any] | None = None,
         result_type: ChartDataResultType | None = None,

@@ -71,7 +71,9 @@ class DatasetMetricData(TypedDict, total=False):
 
 
 class LegacyMetric(TypedDict):
-    label: str | None
+    """Legacy ``{label: ...}`` reference to a predefined (saved) metric."""
+
+    label: str
 
 
 class AdhocMetricColumn(TypedDict, total=False):
