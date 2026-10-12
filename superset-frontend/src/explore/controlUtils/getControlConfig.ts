@@ -17,13 +17,13 @@
  * under the License.
  */
 import memoizeOne from 'memoize-one';
-import { getChartControlPanelRegistry } from '@superset-ui/core';
 import {
   ControlPanelConfig,
   ControlPanelSectionConfig,
   expandControlConfig,
   isControlPanelSectionConfig,
 } from '@superset-ui/chart-controls';
+import { getTypedChartControlPanelRegistry } from './getTypedChartControlPanelRegistry';
 
 /**
  * Find control item from control panel config.
@@ -49,7 +49,7 @@ export function findControlItem(
 }
 
 const getMemoizedControlConfig = memoizeOne(
-  (controlKey, controlPanelConfig: ControlPanelConfig) => {
+  (controlKey, controlPanelConfig: Partial<ControlPanelConfig>) => {
     const { controlOverrides = {}, controlPanelSections = [] } =
       controlPanelConfig;
     const control = expandControlConfig(
@@ -64,11 +64,7 @@ export const getControlConfig = function getControlConfig(
   controlKey: string,
   vizType: string,
 ) {
-  const controlPanelConfig = getChartControlPanelRegistry().get(vizType) || {};
-  return getMemoizedControlConfig(
-    controlKey,
-    // TODO: the ChartControlPanelRegistry is incorrectly typed and needs to
-    // be fixed
-    controlPanelConfig as ControlPanelConfig,
-  );
+  const controlPanelConfig =
+    getTypedChartControlPanelRegistry().get(vizType) || {};
+  return getMemoizedControlConfig(controlKey, controlPanelConfig);
 };
