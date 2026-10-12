@@ -17,10 +17,7 @@
  * under the License.
  */
 import memoizeOne from 'memoize-one';
-import {
-  DatasourceType,
-  getChartControlPanelRegistry,
-} from '@superset-ui/core';
+import { DatasourceType } from '@superset-ui/core';
 import {
   ControlPanelConfig,
   ControlPanelSectionConfig,
@@ -29,9 +26,13 @@ import {
 } from '@superset-ui/chart-controls';
 
 import * as SECTIONS from 'src/explore/controlPanels/sections';
+import { getTypedChartControlPanelRegistry } from './getTypedChartControlPanelRegistry';
 
 const getMemoizedSectionsToRender = memoizeOne(
-  (datasourceType: DatasourceType, controlPanelConfig: ControlPanelConfig) => {
+  (
+    datasourceType: DatasourceType,
+    controlPanelConfig: Partial<ControlPanelConfig>,
+  ) => {
     const {
       sectionOverrides = {},
       controlOverrides,
@@ -114,7 +115,6 @@ export function getSectionsToRender(
   datasourceType: DatasourceType,
 ) {
   const controlPanelConfig =
-    // TODO: update `chartControlPanelRegistry` type to use ControlPanelConfig
-    (getChartControlPanelRegistry().get(vizType) as ControlPanelConfig) || {};
+    getTypedChartControlPanelRegistry().get(vizType) || {};
   return getMemoizedSectionsToRender(datasourceType, controlPanelConfig);
 }
